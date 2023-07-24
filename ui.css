@@ -1,0 +1,47 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  display: flex;
+  gap: 10px;
+  flex-direction: column;
+
+  padding: 5px;
+  padding-top: 10px;
+  width: 300px;
+  border-radius: 15px;
+}
+
+#ballsContainer {
+  background-color: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.ball {
+  cursor: pointer;
+  letter-spacing: 0.15em;
+}
+
+.ball-active {
+  border-bottom: 2px solid black;
+}
+
+#destination {
+  width: 100%;
+  word-wrap: normal;
+  overflow: hidden;
+  background-color: transparent;
+
+  min-height: 48px;
+}
+
+.ball-destination {
+}
+
+.ball-destination:hover {
+  border-bottom: 2px solid black;
+}
