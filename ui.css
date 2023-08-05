@@ -1,17 +1,21 @@
 * {
   margin: 0;
   padding: 0;
+  box-sizing: border-box !important;
+}
+a {
+  text-decoration: none;
 }
 
 body {
   display: flex;
-  gap: 10px;
+  gap: 5px;
   flex-direction: column;
-
+  align-content: center;
+  justify-content: center;
   padding: 5px;
-  padding-top: 10px;
-  width: 300px;
-  border-radius: 15px;
+
+  width: 350px;
 }
 
 #ballsContainer {
@@ -26,22 +30,102 @@ body {
   letter-spacing: 0.15em;
 }
 
-.ball-active {
-  border-bottom: 2px solid black;
+.active {
+  font-weight: 900;
 }
 
 #destination {
-  width: 100%;
-  word-wrap: normal;
-  overflow: hidden;
+  display: inline;
+  font-size: 10px;
+  min-height: 42px;
+
+  letter-spacing: 1px;
+
+  margin: 0;
+  padding: 0;
+
+  word-break: break-all;
+  transition: all 0.5s ease-in-out;
+}
+
+.copy {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  cursor: pointer;
+  font-weight: 900;
+  transition: 0.3s;
+  letter-spacing: 2;
+  border: none;
   background-color: transparent;
-
-  min-height: 48px;
 }
 
-.ball-destination {
+#copyContainer {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
 }
 
-.ball-destination:hover {
-  border-bottom: 2px solid black;
+#copy {
+  font-size: 12px;
+  top: -1px;
+}
+
+.copied::before {
+  font-weight: 400;
+  letter-spacing: 1px;
+  content: "Copied";
+  font-size: 10px;
+  top: -110%;
+  left: -110%;
+  position: absolute;
+
+  transition: all 0s ease-in-out;
+}
+
+#copyContent {
+  display: flex;
+  align-items: end;
+}
+
+a {
+  font-weight: 600;
+}
+.tooltip {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 140px;
+  background-color: #555;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px;
+  position: absolute;
+  z-index: 1;
+  bottom: 150%;
+  left: 50%;
+  margin-left: -75px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.tooltip .tooltiptext::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #555 transparent transparent transparent;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
 }

@@ -1,33 +1,59 @@
 const resolverUrl =
   "https://wwwperf.brandeuauthorlb.ford.com/cf#/etc/guxacc/tools/resource-resolver-tool.html";
 
-(async () => {
-  chrome.runtime.onMessage.addListener(function (
-    request,
-    sender,
-    sendResponse
-  ) {
-    console.log(
-      sender.tab
-        ? "from a content script:" + sender.tab.url
-        : "from the extension"
-    );
-    sendResponse("asda");
-    // if (request.greeting === "hello") {
-    //   chrome.tabs.create({ url: resolverUrl, active: false }, function (tab) {
-    //     chrome.scripting
-    //       .executeScript({
-    //         target: { tabId: tab.id, allFrames: true },
-    //         files: ["scripts/resolver.js"],
-    //       })
-    //       .then(() => {
-    //         chrome.tabs.sendMessage(tab.id, request).then((res) => {
-    //           console.log(res);
-    //           sendResponse(res);
-    //         });
-    //       });
-    //   });
-    // }
-    return true;
-  });
-})();
+// chrome.runtime.onMessage.addListener(function (request, sendResponse) {
+//   if (request.greeting === "inject") {
+//     sendResponse("asd");
+//   }
+
+chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+  if (request.greeting === "resolve") {
+    if (request.domain === "co.uk") {
+      url =
+        "https://wwwperf.brandeuauthorlb.ford.com/bin/guxacc/tools/customslingresresolver?page-path=";
+      url =
+        url + `/content/guxeu-beta/uk/${request.folder}/home` + request.value;
+
+      fetch(url)
+        .then((response) => response.text())
+        .then((response) => {
+          console.log(response);
+          var u = response.split('":"').pop().split('"')[0] + `.html`;
+          console.log(u);
+          sendResponse({ farewell: u });
+        })
+        .catch();
+      return true;
+    } else {
+      url =
+        "https://wwwperf.brandeuauthorlb.ford.com/bin/guxacc/tools/customslingresresolver?page-path=";
+      url =
+        url +
+        `/content/guxeu-beta/${request.domain}/${request.folder}/home` +
+        request.value;
+
+      fetch(url)
+        .then((response) => response.text())
+        .then((response) => {
+          var u = response.split('":"').pop().split('"')[0];
+          sendResponse({ farewell: u + ".html" });
+        })
+        .catch();
+      return true;
+    }
+  } else if (request.greeting === "inject") {
+    console.log("received to inject");
+    console.log(request.value);
+    chrome.scripting
+      .executeScript({
+        target: { tabId: request.value, allFrames: true },
+        files: ["scripts/content.js"],
+      })
+      .then(() => {
+        chrome.tabs.sendMessage(request.value, request).then((res) => {
+          sendResponse(res);
+        });
+      });
+  }
+  return true;
+});

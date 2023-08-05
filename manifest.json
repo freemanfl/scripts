@@ -21,7 +21,9 @@
     },
     "default_popup": "popup.html"
   },
-  "permissions": ["activeTab"],
+  "permissions": ["activeTab", "scripting"],
   "content_scripts": [],
-  "host_permissions": []
+  "host_permissions": [
+    "https://wwwperf.brandeuauthorlb.ford.com/cf#/etc/guxacc/tools/resource-resolver-tool.html"
+  ]
 }

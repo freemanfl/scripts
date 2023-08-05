@@ -11,24 +11,33 @@
   <body>
     <div id="ballsContainer">
       <div class="ball" id="live">
-        <span class="mas">LIVE</span>
+        <a href="#">LIVE</a>
       </div>
 
       <div class="ball" id="perf">
-        <span class="mas">PERF</span>
+        <a href="#">PERF</a>
       </div>
 
-      <div class="ball" id="author">
-        <span class="mas">CLASSIC</span>
-      </div>
-
-      <div class="ball" id="touchui">
-        <span class="mas">TOUCH</span>
+      <div class="ball" id="touch">
+        <a href="#">TOUCH</a>
       </div>
     </div>
 
     <div id="destination"></div>
-
+    <div id="copyContainer">
+      <div class="tooltip">
+        <button class="copy" id="copy">
+          <span class="tooltiptext" id="myTooltip">Copy to clipboard</span>
+          &#128203;
+        </button>
+      </div>
+      <div class="tooltip">
+        <button class="copy" id="copyContent">
+          <span class="tooltiptext" id="myTooltip2">Copy from "/content"</span
+          >/content...
+        </button>
+      </div>
+    </div>
     <!-- <h2>Live</h2>
     <p>https://wwwperf-beta-de.brandeulb.ford.com/fahrzeuge/ford-kuga</p>
     <h2>Short perf</h2>
