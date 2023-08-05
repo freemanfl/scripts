@@ -18,23 +18,25 @@ document.addEventListener("DOMContentLoaded", function () {
     copyToClipboard(textToCopy);
 
     var tooltip = document.getElementById("myTooltip");
-    tooltip.innerHTML = "Copied succsessfully!";
+    tooltip.innerHTML = "Copied successfully!";
 
     copyButton.addEventListener("mouseout", function () {
       tooltip.innerHTML = "Copy to clipboard";
     });
   });
   copyContentButton.addEventListener("click", function () {
-    var textToCopy = "/content" + copyDiv.innerText.split("/content")[1];
+    if (copyDiv.innerText.includes("/content")) {
+      var textToCopy = "/content" + copyDiv.innerText.split("/content")[1];
 
-    copyToClipboard(textToCopy);
+      copyToClipboard(textToCopy);
 
-    var tooltip = document.getElementById("myTooltip2");
-    tooltip.innerHTML = "Copied succsessfully!";
+      var tooltip = document.getElementById("myTooltip2");
+      tooltip.innerHTML = "Copied successfully!";
 
-    copyContentButton.addEventListener("mouseout", function () {
-      tooltip.innerHTML = "Copy to clipboard";
-    });
+      copyContentButton.addEventListener("mouseout", function () {
+        tooltip.innerHTML = "Copy to clipboard";
+      });
+    }
   });
 });
 
