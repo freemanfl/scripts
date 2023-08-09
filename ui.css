@@ -131,6 +131,7 @@ a {
 }
 .loader {
   display: none;
+  margin-top: 5px;
   border: 2px solid #f3f3f3; /* Light grey */
   border-top: 2px solid blue; /* Blue */
   border-radius: 50%;
