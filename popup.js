@@ -102,8 +102,11 @@ for (var i = 0; i < links.length; i++) {
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////
 async function sendGreetings() {
-  var loader = document.getElementById("loader");
+  var touchB = document.getElementById("touch").getElementsByTagName("a")[0];
+  var loader = document.getElementById("touchLoader");
 
+  touchB.style = "display: none";
+  loader.style = "display: block";
   const response = await chrome.runtime.sendMessage({
     greeting: "resolve",
     value: currentEnv.url.split(`ford.${currentEnv.domain}`)[1],
@@ -113,11 +116,12 @@ async function sendGreetings() {
 
   // do something with response here, not outside the function
 
-  var touchB = document.getElementById("touch").getElementsByTagName("a")[0];
-
   touchB.href =
     "https://wwwperf.brandeuauthorlb.ford.com/editor.html" + response.farewell;
-  document.getElementById("destination").innerText = touchB.href;
+
+  touchB.style = "display: block";
+  loader.style = "display: none";
+
   touchB.addEventListener("mouseover", () => {
     document.getElementById("destination").innerText = touchB.href;
   });
@@ -129,6 +133,12 @@ async function sendGreetings() {
 }
 
 async function sendGreetingsFromPerf() {
+  var touchB = document.getElementById("touch").getElementsByTagName("a")[0];
+  var loader = document.getElementById("touchLoader");
+
+  touchB.style = "display: none";
+  loader.style = "display: block";
+
   const response = await chrome.runtime.sendMessage({
     greeting: "resolve",
     value: currentEnv.url.split(`ford.com`)[1],
@@ -138,11 +148,12 @@ async function sendGreetingsFromPerf() {
 
   // do something with response here, not outside the function
 
-  var touchB = document.getElementById("touch").getElementsByTagName("a")[0];
-
   touchB.href =
     "https://wwwperf.brandeuauthorlb.ford.com/editor.html" + response.farewell;
-  document.getElementById("destination").innerText = touchB.href;
+
+  touchB.style = "display: block";
+  loader.style = "display: none";
+
   touchB.addEventListener("mouseover", () => {
     document.getElementById("destination").innerText = touchB.href;
   });
@@ -167,8 +178,6 @@ async function sendGreetingsFromTouch(id) {
 
   liveB.href =
     currentEnv.url.split("perf")[0] + `.ford.${currentEnv.domain}` + response;
-
-  document.getElementById("destination").innerText = liveB.href;
 
   liveB.addEventListener("click", () => {
     chrome.tabs.update({ url: liveB.href });
@@ -197,7 +206,7 @@ async function sendGreetingsFromTouchToPerf(id) {
       currentEnv.url.split("perf")[0] +
       `perf-beta-couk.brandeulb.ford.com` +
       response;
-    document.getElementById("destination").innerText = perfB.href;
+
     perfB.addEventListener("click", () => {
       chrome.tabs.update({ url: perfB.href });
       window.close();
@@ -211,8 +220,6 @@ async function sendGreetingsFromTouchToPerf(id) {
       currentEnv.url.split("perf")[0] +
       `perf-beta-${currentEnv.domain}.brandeulb.ford.com` +
       response;
-
-    document.getElementById("destination").innerText = perfB.href;
 
     perfB.addEventListener("click", () => {
       chrome.tabs.update({ url: perfB.href });
