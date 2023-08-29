@@ -1052,13 +1052,13 @@
 
 //         if (isEuLive(currentEnv.url)) {
 //           for (var i = 0; i < links.length; i++) {
-//             links[i].classList.remove("active");
+//             links[i].classList.remove("activee");
 //           }
 //           document
 //             .querySelector("#uiCont")
 //             .querySelector("#live")
 //             .getElementsByTagName("a")[0]
-//             .classList.add("active");
+//             .classList.add("activee");
 //           currentEnv.live = true;
 //           currentEnv.domain = currentEnv.url
 //             .split(".ford.")
@@ -1120,13 +1120,13 @@
 
 //         if (isPerf(currentEnv.url)) {
 //           for (var i = 0; i < links.length; i++) {
-//             links[i].classList.remove("active");
+//             links[i].classList.remove("activee");
 //           }
 //           document
 //             .querySelector("#uiCont")
 //             .querySelector("#perf")
 //             .getElementsByTagName("a")[0]
-//             .classList.add("active");
+//             .classList.add("activee");
 //           currentEnv.perf = true;
 //           currentEnv.domain = currentEnv.url.split("perf-").pop().split(".")[0];
 
@@ -1186,7 +1186,7 @@
 //           perfLive(currentEnv.url);
 //           perfTouch(currentEnv.url);
 //           for (var i = 0; i < links.length; i++) {
-//             if (!links[i].classList.contains("active")) {
+//             if (!links[i].classList.contains("activee")) {
 //               links[i].classList.add("toHover");
 //             }
 //           }

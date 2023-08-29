@@ -231,6 +231,7 @@ async function sendGreetingsFromTouchToPerf(id) {
     });
   }
 }
+
 function isEuLive(url) {
   if (url.includes("ford.") && url.includes(".com") == false) {
     envCount++;
