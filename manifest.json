@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Scripts Extension",
   "description": "Simplified navigation scripts",
-  "version": "1.0.6",
+  "version": "1.0.8",
   "icons": {
     "16": "images/icon-16.png",
     "32": "images/icon-32.png",
@@ -21,7 +21,7 @@
     },
     "default_popup": "popup.html"
   },
-  "permissions": ["activeTab", "scripting"],
+  "permissions": ["activeTab", "scripting", "storage"],
   "content_scripts": [
     {
       "js": ["scripts/jira.js"],
@@ -31,5 +31,9 @@
   ],
   "host_permissions": [
     "https://wwwperf.brandeuauthorlb.ford.com/cf#/etc/guxacc/tools/resource-resolver-tool.html"
-  ]
+  ],
+  "options_ui": {
+    "page": "options.html",
+    "open_in_tab": false
+  }
 }

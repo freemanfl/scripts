@@ -90,9 +90,6 @@
   align-items: end;
 }
 
-#uiCont a {
-  font-weight: 600;
-}
 .tooltipp {
   position: relative;
   display: inline-block;

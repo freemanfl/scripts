@@ -40,6 +40,14 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 });
 
+document.querySelector("#go-to-options").addEventListener("click", function () {
+  if (chrome.runtime.openOptionsPage) {
+    chrome.runtime.openOptionsPage();
+  } else {
+    window.open(chrome.runtime.getURL("options.html"));
+  }
+});
+
 var envCount = 0;
 const markets = [
   { full: "Ford of Austria", domain: "at", folder: ["de_at"], beta: true },
@@ -248,7 +256,7 @@ function isPerf(url) {
 
 function isAuthor(url) {
   if (
-    url.includes("editor.html") &&
+    url.includes("cf#") &&
     url.includes("perf") &&
     url.includes("/content/")
   ) {
@@ -1284,6 +1292,11 @@ chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
         .getElementById("live")
         .getElementsByTagName("a")[0]
         .classList.add("active");
+
+      document
+        .getElementById("live")
+        .getElementsByTagName("a")[0]
+        .parentElement.classList.remove("hover-link");
       currentEnv.live = true;
       currentEnv.domain = currentEnv.url.split(".ford.").pop().split("/")[0];
 
@@ -1345,6 +1358,11 @@ chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
         .getElementById("perf")
         .getElementsByTagName("a")[0]
         .classList.add("active");
+
+      document
+        .getElementById("perf")
+        .getElementsByTagName("a")[0]
+        .parentElement.classList.remove("hover-link");
       currentEnv.perf = true;
       currentEnv.domain = currentEnv.url.split("perf-").pop().split(".")[0];
 
@@ -1415,6 +1433,14 @@ chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
         .getElementById("touch")
         .getElementsByTagName("a")[0]
         .classList.add("active");
+
+      document
+        .getElementById("touch")
+        .getElementsByTagName("a")[0]
+        .parentElement.classList.remove("hover-link");
+      console.log(
+        document.getElementById("touch").getElementsByTagName("a")[0].classList
+      );
       currentEnv.touch = true;
 
       if (isDam(currentEnv.url)) {

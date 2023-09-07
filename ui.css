@@ -94,6 +94,7 @@ a {
 }
 .tooltip {
   position: relative;
+  transition: transform ease 0.1s;
   display: inline-block;
 }
 
@@ -148,3 +149,36 @@ a {
     transform: rotate(360deg);
   }
 }
+.settings {
+  width: 12px;
+  height: 12px;
+
+  position: absolute;
+  left: 6px;
+  bottom: 6px;
+
+  transition: all ease 0.1s;
+  cursor: pointer;
+}
+
+.settings:hover {
+  animation: spin 2s linear infinite;
+}
+
+.hover-link {
+  text-decoration: none;
+}
+
+/* .hover-link::after {
+  content: "";
+  display: block;
+  width: 0;
+  height: 1px;
+  background: blue;
+  transition: width 0.1s;
+}
+
+.hover-link:hover::after {
+  width: 100%;
+  transition: width 0.1s;
+} */
