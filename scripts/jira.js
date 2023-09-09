@@ -2144,8 +2144,8 @@ chrome.storage.sync.get("jira", function (data) {
           var x = event.clientX,
             y = event.clientY;
           timeout = setTimeout(() => {
-            container.style.top = y - 20 + "px";
-            container.style.left = x - 20 + "px";
+            container.style.top = y - 40 + "px";
+            container.style.left = x - 60 + "px";
 
             container.style.display = "flex";
 
