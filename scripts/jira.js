@@ -98,6 +98,11 @@ chrome.storage.sync.get("jira", function (data) {
               <a href="#">TOUCH</a>
               <div id="touchLoader" class="loader"></div>
             </div>
+
+            <div class="ball" id="classic">
+              <a href="#">CLASSIC</a>
+              <div id="classicLoader" class="loader"></div>
+            </div>
           </div>
 
           <div id="destination"></div>
@@ -166,13 +171,19 @@ chrome.storage.sync.get("jira", function (data) {
     ///////////////////////////////////////////////////////////////////////////////////////////////
     async function sendGreetings() {
       var touchB = document
-        .querySelector("#uiCont")
-        .querySelector("#touch")
+        .getElementById("touch")
         .getElementsByTagName("a")[0];
-      var loader = container.querySelector("#touchLoader");
+      var classicB = document
+        .getElementById("classic")
+        .getElementsByTagName("a")[0];
+      var loader = document.getElementById("touchLoader");
+      var loader2 = document.getElementById("classicLoader");
 
       touchB.style = "display: none";
+      classicB.style = "display: none";
       loader.style = "display: block";
+      loader2.style = "display: block";
+
       const response = await chrome.runtime.sendMessage({
         greeting: "resolve",
         value: currentEnv.url.split(`ford.${currentEnv.domain}`)[1],
@@ -186,27 +197,49 @@ chrome.storage.sync.get("jira", function (data) {
         "https://wwwperf.brandeuauthorlb.ford.com/editor.html" +
         response.farewell;
 
+      classicB.href =
+        "https://wwwperf.brandeuauthorlb.ford.com/cf#" + response.farewell;
+
       touchB.style = "display: block";
+      classicB.style = "display: block";
+
       loader.style = "display: none";
+      loader2.style = "display: none";
 
       touchB.addEventListener("mouseover", () => {
-        container.querySelector("#destination").innerText = touchB.href;
+        document.getElementById("destination").innerText = touchB.href;
       });
 
       touchB.addEventListener("click", () => {
         chrome.tabs.update({ url: touchB.href });
-        // window.close();
+        window.close();
+      });
+
+      classicB.addEventListener("mouseover", () => {
+        document.getElementById("destination").innerText = classicB.href;
+      });
+
+      classicB.addEventListener("click", () => {
+        chrome.tabs.update({ url: classicB.href });
+        window.close();
       });
     }
 
     async function sendGreetingsFromPerf() {
-      var touchB = container
-        .querySelector("#touch")
+      var touchB = document
+        .getElementById("touch")
         .getElementsByTagName("a")[0];
-      var loader = container.querySelector("#touchLoader");
+      var classicB = document
+        .getElementById("classic")
+        .getElementsByTagName("a")[0];
+
+      var loader = document.getElementById("touchLoader");
+      var loader2 = document.getElementById("classicLoader");
 
       touchB.style = "display: none";
+      classicB.style = "display: none";
       loader.style = "display: block";
+      loader2.style = "display: block";
 
       const response = await chrome.runtime.sendMessage({
         greeting: "resolve",
@@ -221,16 +254,31 @@ chrome.storage.sync.get("jira", function (data) {
         "https://wwwperf.brandeuauthorlb.ford.com/editor.html" +
         response.farewell;
 
+      classicB.href =
+        "https://wwwperf.brandeuauthorlb.ford.com/cf#" + response.farewell;
+
       touchB.style = "display: block";
+      classicB.style = "display: block";
+
       loader.style = "display: none";
+      loader2.style = "display: none";
 
       touchB.addEventListener("mouseover", () => {
-        container.querySelector("#destination").innerText = touchB.href;
+        document.getElementById("destination").innerText = touchB.href;
       });
 
       touchB.addEventListener("click", () => {
         chrome.tabs.update({ url: touchB.href });
-        // window.close();
+        window.close();
+      });
+
+      classicB.addEventListener("mouseover", () => {
+        document.getElementById("destination").innerText = classicB.href;
+      });
+
+      classicB.addEventListener("click", () => {
+        chrome.tabs.update({ url: classicB.href });
+        window.close();
       });
     }
 
@@ -244,7 +292,7 @@ chrome.storage.sync.get("jira", function (data) {
 
       // do something with response here, not outside the function
 
-      var liveB = container.querySelector("#live").getElementsByTagName("a")[0];
+      var liveB = document.getElementById("live").getElementsByTagName("a")[0];
 
       liveB.href =
         currentEnv.url.split("perf")[0] +
@@ -253,11 +301,38 @@ chrome.storage.sync.get("jira", function (data) {
 
       liveB.addEventListener("click", () => {
         chrome.tabs.update({ url: liveB.href });
-        // window.close();
+        window.close();
       });
 
       liveB.addEventListener("mouseover", () => {
-        container.querySelector("#destination").innerText = liveB.href;
+        document.getElementById("destination").innerText = liveB.href;
+      });
+    }
+
+    async function sendGreetingsFromClassic(id) {
+      const response = await chrome.runtime.sendMessage({
+        greeting: "inject2",
+        value: id,
+        domain: currentEnv.domain,
+        folder: currentEnv.folder,
+      });
+
+      // do something with response here, not outside the function
+
+      var liveB = document.getElementById("live").getElementsByTagName("a")[0];
+
+      liveB.href =
+        currentEnv.url.split("perf")[0] +
+        `.ford.${currentEnv.domain}` +
+        response;
+
+      liveB.addEventListener("click", () => {
+        chrome.tabs.update({ url: liveB.href });
+        window.close();
+      });
+
+      liveB.addEventListener("mouseover", () => {
+        document.getElementById("destination").innerText = liveB.href;
       });
     }
 
@@ -271,7 +346,7 @@ chrome.storage.sync.get("jira", function (data) {
 
       // do something with response here, not outside the function
 
-      var perfB = container.querySelector("#perf").getElementsByTagName("a")[0];
+      var perfB = document.getElementById("perf").getElementsByTagName("a")[0];
 
       if (currentEnv.domain == "co.uk") {
         perfB.href =
@@ -281,11 +356,11 @@ chrome.storage.sync.get("jira", function (data) {
 
         perfB.addEventListener("click", () => {
           chrome.tabs.update({ url: perfB.href });
-          // window.close();
+          window.close();
         });
 
         perfB.addEventListener("mouseover", () => {
-          container.querySelector("#destination").innerText = perfB.href;
+          document.getElementById("destination").innerText = perfB.href;
         });
       } else {
         perfB.href =
@@ -295,11 +370,54 @@ chrome.storage.sync.get("jira", function (data) {
 
         perfB.addEventListener("click", () => {
           chrome.tabs.update({ url: perfB.href });
-          // window.close();
+          window.close();
         });
 
         perfB.addEventListener("mouseover", () => {
-          container.querySelector("#destination").innerText = perfB.href;
+          document.getElementById("destination").innerText = perfB.href;
+        });
+      }
+    }
+
+    async function sendGreetingsFromClassicToPerf(id) {
+      const response = await chrome.runtime.sendMessage({
+        greeting: "inject2",
+        value: id,
+        domain: currentEnv.domain,
+        folder: currentEnv.folder,
+      });
+
+      // do something with response here, not outside the function
+
+      var perfB = document.getElementById("perf").getElementsByTagName("a")[0];
+
+      if (currentEnv.domain == "co.uk") {
+        perfB.href =
+          currentEnv.url.split("perf")[0] +
+          `perf-beta-couk.brandeulb.ford.com` +
+          response;
+
+        perfB.addEventListener("click", () => {
+          chrome.tabs.update({ url: perfB.href });
+          window.close();
+        });
+
+        perfB.addEventListener("mouseover", () => {
+          document.getElementById("destination").innerText = perfB.href;
+        });
+      } else {
+        perfB.href =
+          currentEnv.url.split("perf")[0] +
+          `perf-beta-${currentEnv.domain}.brandeulb.ford.com` +
+          response;
+
+        perfB.addEventListener("click", () => {
+          chrome.tabs.update({ url: perfB.href });
+          window.close();
+        });
+
+        perfB.addEventListener("mouseover", () => {
+          document.getElementById("destination").innerText = perfB.href;
         });
       }
     }
@@ -319,7 +437,7 @@ chrome.storage.sync.get("jira", function (data) {
 
     function isAuthor(url) {
       if (
-        url.includes("editor.html") &&
+        url.includes("cf#") &&
         url.includes("perf") &&
         url.includes("/content/")
       ) {
@@ -331,7 +449,9 @@ chrome.storage.sync.get("jira", function (data) {
     function isTouch(url) {
       if (
         (url.includes("/editor.html/") ||
-          (url.includes("guxeu") && url.includes("brandeuauthor"))) &&
+          (url.includes("guxeu") &&
+            url.includes("brandeuauthor") &&
+            !url.includes("cf#"))) &&
         url.includes("perf") &&
         url.includes("/content/")
       ) {
@@ -357,12 +477,8 @@ chrome.storage.sync.get("jira", function (data) {
       }
     }
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
     function livePerf(url) {
-      var perfB = document
-        .querySelector("#uiCont")
-        .querySelector("#perf")
-        .getElementsByTagName("a")[0];
+      var perfB = document.getElementById("perf").getElementsByTagName("a")[0];
 
       if (currentEnv.beta) {
         if (currentEnv.dam) {
@@ -373,12 +489,10 @@ chrome.storage.sync.get("jira", function (data) {
             );
             perfB.addEventListener("click", () => {
               chrome.tabs.update({ url: perfB.href });
-              // window.close();
+              window.close();
             });
             perfB.addEventListener("mouseover", () => {
-              document
-                .querySelector("#uiCont")
-                .querySelector("#destination").innerText = perfB.href;
+              document.getElementById("destination").innerText = perfB.href;
             });
           } else {
             perfB.href = url.replace(
@@ -387,10 +501,10 @@ chrome.storage.sync.get("jira", function (data) {
             );
             perfB.addEventListener("click", () => {
               chrome.tabs.update({ url: perfB.href });
-              // window.close();
+              window.close();
             });
             perfB.addEventListener("mouseover", () => {
-              container.querySelector("#destination").innerText = perfB.href;
+              document.getElementById("destination").innerText = perfB.href;
             });
           }
         } else if (currentEnv.siteWide) {
@@ -401,10 +515,10 @@ chrome.storage.sync.get("jira", function (data) {
             );
             perfB.addEventListener("click", () => {
               chrome.tabs.update({ url: perfB.href });
-              // window.close();
+              window.close();
             });
             perfB.addEventListener("mouseover", () => {
-              container.querySelector("#destination").innerText = perfB.href;
+              document.getElementById("destination").innerText = perfB.href;
             });
           } else {
             perfB.href = url.replace(
@@ -413,10 +527,10 @@ chrome.storage.sync.get("jira", function (data) {
             );
             perfB.addEventListener("click", () => {
               chrome.tabs.update({ url: perfB.href });
-              // window.close();
+              window.close();
             });
             perfB.addEventListener("mouseover", () => {
-              container.querySelector("#destination").innerText = perfB.href;
+              document.getElementById("destination").innerText = perfB.href;
             });
           }
         } else {
@@ -427,10 +541,10 @@ chrome.storage.sync.get("jira", function (data) {
             );
             perfB.addEventListener("click", () => {
               chrome.tabs.update({ url: perfB.href });
-              // window.close();
+              window.close();
             });
             perfB.addEventListener("mouseover", () => {
-              container.querySelector("#destination").innerText = perfB.href;
+              document.getElementById("destination").innerText = perfB.href;
             });
           } else {
             perfB.href = url.replace(
@@ -439,12 +553,10 @@ chrome.storage.sync.get("jira", function (data) {
             );
             perfB.addEventListener("click", () => {
               chrome.tabs.update({ url: perfB.href });
-              // window.close();
+              window.close();
             });
             perfB.addEventListener("mouseover", () => {
-              document
-                .querySelector("#uiCont")
-                .querySelector("#destination").innerText = perfB.href;
+              document.getElementById("destination").innerText = perfB.href;
             });
           }
         }
@@ -457,10 +569,10 @@ chrome.storage.sync.get("jira", function (data) {
             );
             perfB.addEventListener("click", () => {
               chrome.tabs.update({ url: perfB.href });
-              // window.close();
+              window.close();
             });
             perfB.addEventListener("mouseover", () => {
-              container.querySelector("#destination").innerText = perfB.href;
+              document.getElementById("destination").innerText = perfB.href;
             });
           } else {
             perfB.href = url.replace(
@@ -469,16 +581,16 @@ chrome.storage.sync.get("jira", function (data) {
             );
             perfB.addEventListener("click", () => {
               chrome.tabs.update({ url: perfB.href });
-              // window.close();
+              window.close();
             });
             perfB.addEventListener("mouseover", () => {
-              container.querySelector("#destination").innerText = perfB.href;
+              document.getElementById("destination").innerText = perfB.href;
             });
           }
         } else if (currentEnv.siteWide) {
           if (currentEnv.domain == "ch" || currentEnv.domain == "be") {
-            var perfB = container
-              .querySelector("#perf")
+            var perfB = document
+              .getElementById("perf")
               .getElementsByTagName("a")[0];
 
             perfB.href = url.replace(
@@ -488,10 +600,10 @@ chrome.storage.sync.get("jira", function (data) {
 
             perfB.addEventListener("click", () => {
               chrome.tabs.update({ url: perfB.href });
-              // window.close();
+              window.close();
             });
             perfB.addEventListener("mouseover", () => {
-              container.querySelector("#destination").innerText = perfB.href;
+              document.getElementById("destination").innerText = perfB.href;
             });
           } else {
             perfB.href = url.replace(
@@ -500,10 +612,10 @@ chrome.storage.sync.get("jira", function (data) {
             );
             perfB.addEventListener("click", () => {
               chrome.tabs.update({ url: perfB.href });
-              // window.close();
+              window.close();
             });
             perfB.addEventListener("mouseover", () => {
-              container.querySelector("#destination").innerText = perfB.href;
+              document.getElementById("destination").innerText = perfB.href;
             });
           }
         } else {
@@ -514,10 +626,10 @@ chrome.storage.sync.get("jira", function (data) {
             );
             perfB.addEventListener("click", () => {
               chrome.tabs.update({ url: perfB.href });
-              // window.close();
+              window.close();
             });
             perfB.addEventListener("mouseover", () => {
-              container.querySelector("#destination").innerText = perfB.href;
+              document.getElementById("destination").innerText = perfB.href;
             });
           } else {
             perfB.href = url.replace(
@@ -526,10 +638,10 @@ chrome.storage.sync.get("jira", function (data) {
             );
             perfB.addEventListener("click", () => {
               chrome.tabs.update({ url: perfB.href });
-              // window.close();
+              window.close();
             });
             perfB.addEventListener("mouseover", () => {
-              container.querySelector("#destination").innerText = perfB.href;
+              document.getElementById("destination").innerText = perfB.href;
             });
           }
         }
@@ -540,8 +652,8 @@ chrome.storage.sync.get("jira", function (data) {
       if (currentEnv.beta) {
         if (currentEnv.dam) {
           if (currentEnv.domain == "co.uk") {
-            var touchB = container
-              .querySelector("#touch")
+            var touchB = document
+              .getElementById("touch")
               .getElementsByTagName("a")[0];
             touchB.href = url.replace(
               `.ford.${currentEnv.domain}/content`,
@@ -550,14 +662,14 @@ chrome.storage.sync.get("jira", function (data) {
 
             touchB.addEventListener("click", () => {
               chrome.tabs.update({ url: touchB.href });
-              // window.close();
+              window.close();
             });
             touchB.addEventListener("mouseover", () => {
-              container.querySelector("#destination").innerText = touchB.href;
+              document.getElementById("destination").innerText = touchB.href;
             });
           } else {
-            var touchB = container
-              .querySelector("#touch")
+            var touchB = document
+              .getElementById("touch")
               .getElementsByTagName("a")[0];
             touchB.href = url.replace(
               `.ford.${currentEnv.domain}/content`,
@@ -566,16 +678,16 @@ chrome.storage.sync.get("jira", function (data) {
 
             touchB.addEventListener("click", () => {
               chrome.tabs.update({ url: touchB.href });
-              // window.close();
+              window.close();
             });
             touchB.addEventListener("mouseover", () => {
-              container.querySelector("#destination").innerText = touchB.href;
+              document.getElementById("destination").innerText = touchB.href;
             });
           }
         } else if (currentEnv.siteWide) {
           if (currentEnv.domain == "co.uk") {
-            var touchB = container
-              .querySelector("#touch")
+            var touchB = document
+              .getElementById("touch")
               .getElementsByTagName("a")[0];
             touchB.href = url.replace(
               `.ford.${currentEnv.domain}/content`,
@@ -584,14 +696,14 @@ chrome.storage.sync.get("jira", function (data) {
             touchB.href = touchB.href + ".html";
             touchB.addEventListener("click", () => {
               chrome.tabs.update({ url: touchB.href });
-              // window.close();
+              window.close();
             });
             touchB.addEventListener("mouseover", () => {
-              container.querySelector("#destination").innerText = touchB.href;
+              document.getElementById("destination").innerText = touchB.href;
             });
           } else {
-            var touchB = container
-              .querySelector("#touch")
+            var touchB = document
+              .getElementById("touch")
               .getElementsByTagName("a")[0];
             touchB.href = url.replace(
               `.ford.${currentEnv.domain}/content`,
@@ -600,10 +712,10 @@ chrome.storage.sync.get("jira", function (data) {
             touchB.href = touchB.href + ".html";
             touchB.addEventListener("click", () => {
               chrome.tabs.update({ url: touchB.href });
-              // window.close();
+              window.close();
             });
             touchB.addEventListener("mouseover", () => {
-              container.querySelector("#destination").innerText = touchB.href;
+              document.getElementById("destination").innerText = touchB.href;
             });
           }
         } else {
@@ -616,8 +728,8 @@ chrome.storage.sync.get("jira", function (data) {
       } else {
         if (currentEnv.dam) {
           if (currentEnv.domain == "ch" || currentEnv.domain == "be") {
-            var touchB = container
-              .querySelector("#touch")
+            var touchB = document
+              .getElementById("touch")
               .getElementsByTagName("a")[0];
 
             touchB.href = url.replace(
@@ -627,14 +739,14 @@ chrome.storage.sync.get("jira", function (data) {
 
             touchB.addEventListener("click", () => {
               chrome.tabs.update({ url: touchB.href });
-              // window.close();
+              window.close();
             });
             touchB.addEventListener("mouseover", () => {
-              container.querySelector("#destination").innerText = touchB.href;
+              document.getElementById("destination").innerText = touchB.href;
             });
           } else {
-            var touchB = container
-              .querySelector("#touch")
+            var touchB = document
+              .getElementById("touch")
               .getElementsByTagName("a")[0];
 
             touchB.href = url.replace(
@@ -644,16 +756,16 @@ chrome.storage.sync.get("jira", function (data) {
 
             touchB.addEventListener("click", () => {
               chrome.tabs.update({ url: touchB.href });
-              // window.close();
+              window.close();
             });
             touchB.addEventListener("mouseover", () => {
-              container.querySelector("#destination").innerText = touchB.href;
+              document.getElementById("destination").innerText = touchB.href;
             });
           }
         } else if (currentEnv.siteWide) {
           if (currentEnv.domain == "ch" || currentEnv.domain == "be") {
-            var touchB = container
-              .querySelector("#touch")
+            var touchB = document
+              .getElementById("touch")
               .getElementsByTagName("a")[0];
 
             touchB.href = url.replace(
@@ -663,14 +775,14 @@ chrome.storage.sync.get("jira", function (data) {
             touchB.href = touchB.href + ".html";
             touchB.addEventListener("click", () => {
               chrome.tabs.update({ url: touchB.href });
-              // window.close();
+              window.close();
             });
             touchB.addEventListener("mouseover", () => {
-              container.querySelector("#destination").innerText = touchB.href;
+              document.getElementById("destination").innerText = touchB.href;
             });
           } else {
-            var touchB = container
-              .querySelector("#touch")
+            var touchB = document
+              .getElementById("touch")
               .getElementsByTagName("a")[0];
 
             touchB.href = url.replace(
@@ -680,16 +792,16 @@ chrome.storage.sync.get("jira", function (data) {
             touchB.href = touchB.href + ".html";
             touchB.addEventListener("click", () => {
               chrome.tabs.update({ url: touchB.href });
-              // window.close();
+              window.close();
             });
             touchB.addEventListener("mouseover", () => {
-              container.querySelector("#destination").innerText = touchB.href;
+              document.getElementById("destination").innerText = touchB.href;
             });
           }
         } else {
           if (currentEnv.domain == "ch" || currentEnv.domain == "be") {
-            var touchB = container
-              .querySelector("#touch")
+            var touchB = document
+              .getElementById("touch")
               .getElementsByTagName("a")[0];
 
             touchB.href = url.replace(
@@ -699,14 +811,14 @@ chrome.storage.sync.get("jira", function (data) {
             touchB.href = touchB.href + ".html";
             touchB.addEventListener("click", () => {
               chrome.tabs.update({ url: touchB.href });
-              // window.close();
+              window.close();
             });
             touchB.addEventListener("mouseover", () => {
-              container.querySelector("#destination").innerText = touchB.href;
+              document.getElementById("destination").innerText = touchB.href;
             });
           } else {
-            var touchB = container
-              .querySelector("#touch")
+            var touchB = document
+              .getElementById("touch")
               .getElementsByTagName("a")[0];
 
             touchB.href = url.replace(
@@ -716,20 +828,210 @@ chrome.storage.sync.get("jira", function (data) {
             touchB.href = touchB.href + ".html";
             touchB.addEventListener("click", () => {
               chrome.tabs.update({ url: touchB.href });
-              // window.close();
+              window.close();
             });
             touchB.addEventListener("mouseover", () => {
-              container.querySelector("#destination").innerText = touchB.href;
+              document.getElementById("destination").innerText = touchB.href;
             });
           }
         }
       }
     }
 
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    function liveClassic(url) {
+      if (currentEnv.beta) {
+        if (currentEnv.dam) {
+          if (currentEnv.domain == "co.uk") {
+            var classicB = document
+              .getElementById("classic")
+              .getElementsByTagName("a")[0];
+            classicB.href = url.replace(
+              `.ford.${currentEnv.domain}/content`,
+              `perf.brandeuauthorlb.ford.com/damadmin#/content`
+            );
+
+            classicB.addEventListener("click", () => {
+              chrome.tabs.update({ url: classicB.href });
+              window.close();
+            });
+            classicB.addEventListener("mouseover", () => {
+              document.getElementById("destination").innerText = classicB.href;
+            });
+          } else {
+            var classicB = document
+              .getElementById("classic")
+              .getElementsByTagName("a")[0];
+            classicB.href = url.replace(
+              `.ford.${currentEnv.domain}/content`,
+              `perf.brandeuauthorlb.ford.com/damadmin#/content`
+            );
+
+            classicB.addEventListener("click", () => {
+              chrome.tabs.update({ url: classicB.href });
+              window.close();
+            });
+            classicB.addEventListener("mouseover", () => {
+              document.getElementById("destination").innerText = classicB.href;
+            });
+          }
+        } else if (currentEnv.siteWide) {
+          if (currentEnv.domain == "co.uk") {
+            var classicB = document
+              .getElementById("classic")
+              .getElementsByTagName("a")[0];
+            classicB.href = url.replace(
+              `.ford.${currentEnv.domain}/content`,
+              `perf.brandeuauthorlb.ford.com/cf#/content/guxeu-beta/uk/${currentEnv.folder}/site-wide-content`
+            );
+            classicB.href = classicB.href + ".html";
+            classicB.addEventListener("click", () => {
+              chrome.tabs.update({ url: classicB.href });
+              window.close();
+            });
+            classicB.addEventListener("mouseover", () => {
+              document.getElementById("destination").innerText = classicB.href;
+            });
+          } else {
+            var classicB = document
+              .getElementById("classic")
+              .getElementsByTagName("a")[0];
+            classicB.href = url.replace(
+              `.ford.${currentEnv.domain}/content`,
+              `perf.brandeuauthorlb.ford.com/cf#/content/guxeu-beta/${currentEnv.domain}/${currentEnv.folder}/site-wide-content`
+            );
+            classicB.href = classicB.href + ".html";
+            classicB.addEventListener("click", () => {
+              chrome.tabs.update({ url: classicB.href });
+              window.close();
+            });
+            classicB.addEventListener("mouseover", () => {
+              document.getElementById("destination").innerText = classicB.href;
+            });
+          }
+        } else {
+          if (currentEnv.domain == "co.uk") {
+            // sendGreetings();
+          } else {
+            // sendGreetings();
+          }
+        }
+      } else {
+        if (currentEnv.dam) {
+          if (currentEnv.domain == "ch" || currentEnv.domain == "be") {
+            var classicB = document
+              .getElementById("classic")
+              .getElementsByTagName("a")[0];
+
+            classicB.href = url.replace(
+              `.${currentEnv.sub}.ford.${currentEnv.domain}/content`,
+              `perf.brandeuauthorlb.ford.com/damadmin#/content`
+            );
+
+            classicB.addEventListener("click", () => {
+              chrome.tabs.update({ url: classicB.href });
+              window.close();
+            });
+            classicB.addEventListener("mouseover", () => {
+              document.getElementById("destination").innerText = classicB.href;
+            });
+          } else {
+            var classicB = document
+              .getElementById("classic")
+              .getElementsByTagName("a")[0];
+
+            classicB.href = url.replace(
+              `.ford.${currentEnv.domain}/content`,
+              `perf.brandeuauthorlb.ford.com/damadmin#/content`
+            );
+
+            classicB.addEventListener("click", () => {
+              chrome.tabs.update({ url: classicB.href });
+              window.close();
+            });
+            classicB.addEventListener("mouseover", () => {
+              document.getElementById("destination").innerText = classicB.href;
+            });
+          }
+        } else if (currentEnv.siteWide) {
+          if (currentEnv.domain == "ch" || currentEnv.domain == "be") {
+            var classicB = document
+              .getElementById("classic")
+              .getElementsByTagName("a")[0];
+
+            classicB.href = url.replace(
+              `.${currentEnv.sub}.ford.${currentEnv.domain}/content`,
+              `perf.brandeuauthorlb.ford.com/cf#/content/guxeu/${currentEnv.domain}/${currentEnv.folder}/site-wide-content`
+            );
+            classicB.href = classicB.href + ".html";
+            classicB.addEventListener("click", () => {
+              chrome.tabs.update({ url: classicB.href });
+              window.close();
+            });
+            classicB.addEventListener("mouseover", () => {
+              document.getElementById("destination").innerText = classicB.href;
+            });
+          } else {
+            var classicB = document
+              .getElementById("classic")
+              .getElementsByTagName("a")[0];
+
+            classicB.href = url.replace(
+              `.ford.${currentEnv.domain}/content`,
+              `perf.brandeuauthorlb.ford.com/cf#/content/guxeu/${currentEnv.domain}/${currentEnv.folder}/site-wide-content`
+            );
+            classicB.href = classicB.href + ".html";
+            classicB.addEventListener("click", () => {
+              chrome.tabs.update({ url: classicB.href });
+              window.close();
+            });
+            classicB.addEventListener("mouseover", () => {
+              document.getElementById("destination").innerText = classicB.href;
+            });
+          }
+        } else {
+          if (currentEnv.domain == "ch" || currentEnv.domain == "be") {
+            var classicB = document
+              .getElementById("classic")
+              .getElementsByTagName("a")[0];
+
+            classicB.href = url.replace(
+              `.${currentEnv.sub}.ford.${currentEnv.domain}`,
+              `perf.brandeuauthorlb.ford.com/cf#/content/guxeu/${currentEnv.domain}/${currentEnv.folder}/home`
+            );
+            classicB.href = classicB.href + ".html";
+            classicB.addEventListener("click", () => {
+              chrome.tabs.update({ url: classicB.href });
+              window.close();
+            });
+            classicB.addEventListener("mouseover", () => {
+              document.getElementById("destination").innerText = classicB.href;
+            });
+          } else {
+            var classicB = document
+              .getElementById("classic")
+              .getElementsByTagName("a")[0];
+
+            classicB.href = url.replace(
+              `.ford.${currentEnv.domain}`,
+              `perf.brandeuauthorlb.ford.com/cf#/content/guxeu/${currentEnv.domain}/${currentEnv.folder}/home`
+            );
+            classicB.href = classicB.href + ".html";
+            classicB.addEventListener("click", () => {
+              chrome.tabs.update({ url: classicB.href });
+              window.close();
+            });
+            classicB.addEventListener("mouseover", () => {
+              document.getElementById("destination").innerText = classicB.href;
+            });
+          }
+        }
+      }
+    }
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     function perfLive(url) {
-      var liveB = container.querySelector("#live").getElementsByTagName("a")[0];
+      var liveB = document.getElementById("live").getElementsByTagName("a")[0];
 
       if (currentEnv.beta) {
         if (currentEnv.dam) {
@@ -740,10 +1042,10 @@ chrome.storage.sync.get("jira", function (data) {
             );
             liveB.addEventListener("click", () => {
               chrome.tabs.update({ url: liveB.href });
-              // window.close();
+              window.close();
             });
             liveB.addEventListener("mouseover", () => {
-              container.querySelector("#destination").innerText = liveB.href;
+              document.getElementById("destination").innerText = liveB.href;
             });
           } else {
             liveB.href = url.replace(
@@ -752,10 +1054,10 @@ chrome.storage.sync.get("jira", function (data) {
             );
             liveB.addEventListener("click", () => {
               chrome.tabs.update({ url: liveB.href });
-              // window.close();
+              window.close();
             });
             liveB.addEventListener("mouseover", () => {
-              container.querySelector("#destination").innerText = liveB.href;
+              document.getElementById("destination").innerText = liveB.href;
             });
           }
         } else if (currentEnv.siteWide) {
@@ -766,10 +1068,10 @@ chrome.storage.sync.get("jira", function (data) {
             );
             liveB.addEventListener("click", () => {
               chrome.tabs.update({ url: liveB.href });
-              // window.close();
+              window.close();
             });
             liveB.addEventListener("mouseover", () => {
-              container.querySelector("#destination").innerText = liveB.href;
+              document.getElementById("destination").innerText = liveB.href;
             });
           } else {
             liveB.href = url.replace(
@@ -778,10 +1080,10 @@ chrome.storage.sync.get("jira", function (data) {
             );
             liveB.addEventListener("click", () => {
               chrome.tabs.update({ url: liveB.href });
-              // window.close();
+              window.close();
             });
             liveB.addEventListener("mouseover", () => {
-              container.querySelector("#destination").innerText = liveB.href;
+              document.getElementById("destination").innerText = liveB.href;
             });
           }
         } else {
@@ -792,10 +1094,10 @@ chrome.storage.sync.get("jira", function (data) {
             );
             liveB.addEventListener("click", () => {
               chrome.tabs.update({ url: liveB.href });
-              // window.close();
+              window.close();
             });
             liveB.addEventListener("mouseover", () => {
-              container.querySelector("#destination").innerText = liveB.href;
+              document.getElementById("destination").innerText = liveB.href;
             });
           } else {
             liveB.href = url.replace(
@@ -804,10 +1106,10 @@ chrome.storage.sync.get("jira", function (data) {
             );
             liveB.addEventListener("click", () => {
               chrome.tabs.update({ url: liveB.href });
-              // window.close();
+              window.close();
             });
             liveB.addEventListener("mouseover", () => {
-              container.querySelector("#destination").innerText = liveB.href;
+              document.getElementById("destination").innerText = liveB.href;
             });
           }
         }
@@ -820,10 +1122,10 @@ chrome.storage.sync.get("jira", function (data) {
             );
             liveB.addEventListener("click", () => {
               chrome.tabs.update({ url: liveB.href });
-              // window.close();
+              window.close();
             });
             liveB.addEventListener("mouseover", () => {
-              container.querySelector("#destination").innerText = liveB.href;
+              document.getElementById("destination").innerText = liveB.href;
             });
           } else {
             liveB.href = url.replace(
@@ -832,10 +1134,10 @@ chrome.storage.sync.get("jira", function (data) {
             );
             liveB.addEventListener("click", () => {
               chrome.tabs.update({ url: liveB.href });
-              // window.close();
+              window.close();
             });
             liveB.addEventListener("mouseover", () => {
-              container.querySelector("#destination").innerText = liveB.href;
+              document.getElementById("destination").innerText = liveB.href;
             });
           }
         } else if (currentEnv.siteWide) {
@@ -847,10 +1149,10 @@ chrome.storage.sync.get("jira", function (data) {
 
             liveB.addEventListener("click", () => {
               chrome.tabs.update({ url: liveB.href });
-              // window.close();
+              window.close();
             });
             liveB.addEventListener("mouseover", () => {
-              container.querySelector("#destination").innerText = liveB.href;
+              document.getElementById("destination").innerText = liveB.href;
             });
           } else {
             liveB.href = url.replace(
@@ -859,10 +1161,10 @@ chrome.storage.sync.get("jira", function (data) {
             );
             liveB.addEventListener("click", () => {
               chrome.tabs.update({ url: liveB.href });
-              // window.close();
+              window.close();
             });
             liveB.addEventListener("mouseover", () => {
-              container.querySelector("#destination").innerText = liveB.href;
+              document.getElementById("destination").innerText = liveB.href;
             });
           }
         } else {
@@ -873,10 +1175,10 @@ chrome.storage.sync.get("jira", function (data) {
             );
             liveB.addEventListener("click", () => {
               chrome.tabs.update({ url: liveB.href });
-              // window.close();
+              window.close();
             });
             liveB.addEventListener("mouseover", () => {
-              container.querySelector("#destination").innerText = liveB.href;
+              document.getElementById("destination").innerText = liveB.href;
             });
           } else {
             liveB.href = url.replace(
@@ -885,10 +1187,10 @@ chrome.storage.sync.get("jira", function (data) {
             );
             liveB.addEventListener("click", () => {
               chrome.tabs.update({ url: liveB.href });
-              // window.close();
+              window.close();
             });
             liveB.addEventListener("mouseover", () => {
-              container.querySelector("#destination").innerText = liveB.href;
+              document.getElementById("destination").innerText = liveB.href;
             });
           }
         }
@@ -896,8 +1198,8 @@ chrome.storage.sync.get("jira", function (data) {
     }
 
     function perfTouch(url) {
-      var touchB = container
-        .querySelector("#touch")
+      var touchB = document
+        .getElementById("touch")
         .getElementsByTagName("a")[0];
 
       if (currentEnv.beta) {
@@ -910,10 +1212,10 @@ chrome.storage.sync.get("jira", function (data) {
 
             touchB.addEventListener("click", () => {
               chrome.tabs.update({ url: touchB.href });
-              // window.close();
+              window.close();
             });
             touchB.addEventListener("mouseover", () => {
-              container.querySelector("#destination").innerText = touchB.href;
+              document.getElementById("destination").innerText = touchB.href;
             });
           } else {
             touchB.href = url.replace(
@@ -923,10 +1225,10 @@ chrome.storage.sync.get("jira", function (data) {
 
             touchB.addEventListener("click", () => {
               chrome.tabs.update({ url: touchB.href });
-              // window.close();
+              window.close();
             });
             touchB.addEventListener("mouseover", () => {
-              container.querySelector("#destination").innerText = touchB.href;
+              document.getElementById("destination").innerText = touchB.href;
             });
           }
         } else if (currentEnv.siteWide) {
@@ -939,10 +1241,10 @@ chrome.storage.sync.get("jira", function (data) {
 
             touchB.addEventListener("click", () => {
               chrome.tabs.update({ url: touchB.href });
-              // window.close();
+              window.close();
             });
             touchB.addEventListener("mouseover", () => {
-              container.querySelector("#destination").innerText = touchB.href;
+              document.getElementById("destination").innerText = touchB.href;
             });
           } else {
             touchB.href = url.replace(
@@ -953,10 +1255,10 @@ chrome.storage.sync.get("jira", function (data) {
 
             touchB.addEventListener("click", () => {
               chrome.tabs.update({ url: touchB.href });
-              // window.close();
+              window.close();
             });
             touchB.addEventListener("mouseover", () => {
-              container.querySelector("#destination").innerText = touchB.href;
+              document.getElementById("destination").innerText = touchB.href;
             });
           }
         } else {
@@ -976,10 +1278,10 @@ chrome.storage.sync.get("jira", function (data) {
 
             touchB.addEventListener("click", () => {
               chrome.tabs.update({ url: touchB.href });
-              // window.close();
+              window.close();
             });
             touchB.addEventListener("mouseover", () => {
-              container.querySelector("#destination").innerText = touchB.href;
+              document.getElementById("destination").innerText = touchB.href;
             });
           } else {
             touchB.href = url.replace(
@@ -989,10 +1291,10 @@ chrome.storage.sync.get("jira", function (data) {
 
             touchB.addEventListener("click", () => {
               chrome.tabs.update({ url: touchB.href });
-              // window.close();
+              window.close();
             });
             touchB.addEventListener("mouseover", () => {
-              container.querySelector("#destination").innerText = touchB.href;
+              document.getElementById("destination").innerText = touchB.href;
             });
           }
         } else if (currentEnv.siteWide) {
@@ -1005,10 +1307,10 @@ chrome.storage.sync.get("jira", function (data) {
 
             touchB.addEventListener("click", () => {
               chrome.tabs.update({ url: touchB.href });
-              // window.close();
+              window.close();
             });
             touchB.addEventListener("mouseover", () => {
-              container.querySelector("#destination").innerText = touchB.href;
+              document.getElementById("destination").innerText = touchB.href;
             });
           } else {
             touchB.href = url.replace(
@@ -1020,10 +1322,10 @@ chrome.storage.sync.get("jira", function (data) {
 
             touchB.addEventListener("click", () => {
               chrome.tabs.update({ url: touchB.href });
-              // window.close();
+              window.close();
             });
             touchB.addEventListener("mouseover", () => {
-              container.querySelector("#destination").innerText = touchB.href;
+              document.getElementById("destination").innerText = touchB.href;
             });
           }
         } else {
@@ -1036,10 +1338,10 @@ chrome.storage.sync.get("jira", function (data) {
 
             touchB.addEventListener("click", () => {
               chrome.tabs.update({ url: touchB.href });
-              // window.close();
+              window.close();
             });
             touchB.addEventListener("mouseover", () => {
-              container.querySelector("#destination").innerText = touchB.href;
+              document.getElementById("destination").innerText = touchB.href;
             });
           } else {
             touchB.href = url.replace(
@@ -1050,14 +1352,785 @@ chrome.storage.sync.get("jira", function (data) {
 
             touchB.addEventListener("click", () => {
               chrome.tabs.update({ url: touchB.href });
-              // window.close();
+              window.close();
             });
             touchB.addEventListener("mouseover", () => {
-              container.querySelector("#destination").innerText = touchB.href;
+              document.getElementById("destination").innerText = touchB.href;
             });
           }
         }
       }
+    }
+
+    function perfClassic(url) {
+      var classicB = document
+        .getElementById("classic")
+        .getElementsByTagName("a")[0];
+
+      if (currentEnv.beta) {
+        if (currentEnv.dam) {
+          if (currentEnv.domain == "co.uk") {
+            classicB.href = url.replace(
+              `perf-beta-couk.brandeulb.ford.com/content`,
+              `perf.brandeuauthorlb.ford.com/damadmin#/content`
+            );
+
+            classicB.addEventListener("click", () => {
+              chrome.tabs.update({ url: classicB.href });
+              window.close();
+            });
+            classicB.addEventListener("mouseover", () => {
+              document.getElementById("destination").innerText = classicB.href;
+            });
+          } else {
+            classicB.href = url.replace(
+              `perf-beta-${currentEnv.domain}.brandeulb.ford.com/content`,
+              `perf.brandeuauthorlb.ford.com/damadmin#/content`
+            );
+
+            classicB.addEventListener("click", () => {
+              chrome.tabs.update({ url: classicB.href });
+              window.close();
+            });
+            classicB.addEventListener("mouseover", () => {
+              document.getElementById("destination").innerText = classicB.href;
+            });
+          }
+        } else if (currentEnv.siteWide) {
+          if (currentEnv.domain == "co.uk") {
+            classicB.href = url.replace(
+              `perf-beta-couk.brandeulb.ford.com/content`,
+              `perf.brandeuauthorlb.ford.com/cf#/content/guxeu-beta/uk/${currentEnv.folder}/site-wide-content`
+            );
+            classicB.href = classicB.href + ".html";
+
+            classicB.addEventListener("click", () => {
+              chrome.tabs.update({ url: classicB.href });
+              window.close();
+            });
+            classicB.addEventListener("mouseover", () => {
+              document.getElementById("destination").innerText = classicB.href;
+            });
+          } else {
+            classicB.href = url.replace(
+              `perf-beta-${currentEnv.domain}.brandeulb.ford.com/content`,
+              `perf.brandeuauthorlb.ford.com/cf#/content/guxeu-beta/${currentEnv.domain}/${currentEnv.folder}/site-wide-content`
+            );
+            classicB.href = classicB.href + ".html";
+
+            classicB.addEventListener("click", () => {
+              chrome.tabs.update({ url: classicB.href });
+              window.close();
+            });
+            classicB.addEventListener("mouseover", () => {
+              document.getElementById("destination").innerText = classicB.href;
+            });
+          }
+        } else {
+          if (currentEnv.domain == "co.uk") {
+            // sendGreetingsFromPerf();
+          } else {
+            // sendGreetingsFromPerf();
+          }
+        }
+      } else {
+        if (currentEnv.dam) {
+          if (currentEnv.domain == "ch" || currentEnv.domain == "be") {
+            classicB.href = url.replace(
+              `perf-${currentEnv.domain}${currentEnv.sub}.brandeulb.ford.com/content`,
+              `perf.brandeuauthorlb.ford.com/damadmin#/content`
+            );
+
+            classicB.addEventListener("click", () => {
+              chrome.tabs.update({ url: classicB.href });
+              window.close();
+            });
+            classicB.addEventListener("mouseover", () => {
+              document.getElementById("destination").innerText = classicB.href;
+            });
+          } else {
+            classicB.href = url.replace(
+              `perf-${currentEnv.domain}.brandeulb.ford.com/content`,
+              `perf.brandeuauthorlb.ford.com/damadmin#/content`
+            );
+
+            classicB.addEventListener("click", () => {
+              chrome.tabs.update({ url: classicB.href });
+              window.close();
+            });
+            classicB.addEventListener("mouseover", () => {
+              document.getElementById("destination").innerText = classicB.href;
+            });
+          }
+        } else if (currentEnv.siteWide) {
+          if (currentEnv.domain == "ch" || currentEnv.domain == "be") {
+            classicB.href = url.replace(
+              `perf-${currentEnv.domain}${currentEnv.sub}.brandeulb.ford.com/content`,
+              `perf.brandeuauthorlb.ford.com/cf#/content/guxeu/${currentEnv.domain}/${currentEnv.folder}/site-wide-content`
+            );
+            classicB.href = classicB.href + ".html";
+
+            classicB.addEventListener("click", () => {
+              chrome.tabs.update({ url: classicB.href });
+              window.close();
+            });
+            classicB.addEventListener("mouseover", () => {
+              document.getElementById("destination").innerText = classicB.href;
+            });
+          } else {
+            classicB.href = url.replace(
+              `perf-${currentEnv.domain}.brandeulb.ford.com/content`,
+              `perf.brandeuauthorlb.ford.com/cf#/content/guxeu/${currentEnv.domain}/${currentEnv.folder}/site-wide-content`
+            );
+
+            classicB.href = classicB.href + ".html";
+
+            classicB.addEventListener("click", () => {
+              chrome.tabs.update({ url: classicB.href });
+              window.close();
+            });
+            classicB.addEventListener("mouseover", () => {
+              document.getElementById("destination").innerText = classicB.href;
+            });
+          }
+        } else {
+          if (currentEnv.domain == "ch" || currentEnv.domain == "be") {
+            classicB.href = url.replace(
+              `perf-${currentEnv.domain}${currentEnv.sub}.brandeulb.ford.com`,
+              `perf.brandeuauthorlb.ford.com/cf#/content/guxeu/${currentEnv.domain}/${currentEnv.folder}/home`
+            );
+            classicB.href = classicB.href + ".html";
+
+            classicB.addEventListener("click", () => {
+              chrome.tabs.update({ url: classicB.href });
+              window.close();
+            });
+            classicB.addEventListener("mouseover", () => {
+              document.getElementById("destination").innerText = classicB.href;
+            });
+          } else {
+            classicB.href = url.replace(
+              `perf-${currentEnv.domain}.brandeulb.ford.com`,
+              `perf.brandeuauthorlb.ford.com/cf#/content/guxeu/${currentEnv.domain}/${currentEnv.folder}/home`
+            );
+            classicB.href = classicB.href + ".html";
+
+            classicB.addEventListener("click", () => {
+              chrome.tabs.update({ url: classicB.href });
+              window.close();
+            });
+            classicB.addEventListener("mouseover", () => {
+              document.getElementById("destination").innerText = classicB.href;
+            });
+          }
+        }
+      }
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    function touchLive(url, id) {
+      var liveB = document.getElementById("live").getElementsByTagName("a")[0];
+
+      if (currentEnv.beta) {
+        if (currentEnv.dam) {
+          liveB.href = url.replace(
+            `perf.brandeuauthorlb.ford.com/damadmin#/content/`,
+            `.ford.${currentEnv.domain}/content/`
+          );
+
+          liveB.addEventListener("click", () => {
+            chrome.tabs.update({ url: liveB.href });
+            window.close();
+          });
+          liveB.addEventListener("mouseover", () => {
+            document.getElementById("destination").innerText = liveB.href;
+          });
+        } else if (currentEnv.siteWide) {
+          if (currentEnv.domain == "co.uk") {
+            liveB.href = url.replace(
+              `perf.brandeuauthorlb.ford.com/editor.html/content/guxeu-beta/uk/${currentEnv.folder}/site-wide-content`,
+              `.ford.co.uk/content`
+            );
+
+            liveB.addEventListener("click", () => {
+              chrome.tabs.update({ url: liveB.href });
+              window.close();
+            });
+            liveB.addEventListener("mouseover", () => {
+              document.getElementById("destination").innerText = liveB.href;
+            });
+          } else {
+            liveB.href = url.replace(
+              `perf.brandeuauthorlb.ford.com/editor.html/content/guxeu-beta/${currentEnv.domain}/${currentEnv.folder}/site-wide-content`,
+              `.ford.${currentEnv.domain}/content`
+            );
+
+            liveB.addEventListener("click", () => {
+              chrome.tabs.update({ url: liveB.href });
+              window.close();
+            });
+
+            liveB.addEventListener("mouseover", () => {
+              document.getElementById("destination").innerText = liveB.href;
+            });
+          }
+        } else {
+          if (currentEnv.domain == "co.uk") {
+            sendGreetingsFromTouch(id);
+          } else {
+            sendGreetingsFromTouch(id);
+          }
+        }
+      } else {
+        if (currentEnv.dam) {
+          if (currentEnv.domain == "ch" || currentEnv.domain == "be") {
+            liveB.href = url.replace(
+              `perf.brandeuauthorlb.ford.com/damadmin#/content`,
+              `.${currentEnv.sub}.ford.${currentEnv.domain}/content`
+            );
+
+            liveB.addEventListener("click", () => {
+              chrome.tabs.update({ url: liveB.href });
+              window.close();
+            });
+            liveB.addEventListener("mouseover", () => {
+              document.getElementById("destination").innerText = liveB.href;
+            });
+          } else {
+            liveB.href = url.replace(
+              `perf.brandeuauthorlb.ford.com/damadmin#/content`,
+              `.ford.${currentEnv.domain}/content`
+            );
+
+            liveB.addEventListener("click", () => {
+              chrome.tabs.update({ url: liveB.href });
+              window.close();
+            });
+            liveB.addEventListener("mouseover", () => {
+              document.getElementById("destination").innerText = liveB.href;
+            });
+          }
+        } else if (currentEnv.siteWide) {
+          if (currentEnv.domain == "ch" || currentEnv.domain == "be") {
+            liveB.href = url.replace(
+              `perf.brandeuauthorlb.ford.com/editor.html/content/guxeu/${currentEnv.domain}/${currentEnv.folder}/site-wide-content`,
+              `.${currentEnv.sub}.ford.${currentEnv.domain}/content`
+            );
+            liveB.href = liveB.href + ".html";
+
+            liveB.addEventListener("click", () => {
+              chrome.tabs.update({ url: liveB.href });
+              window.close();
+            });
+            liveB.addEventListener("mouseover", () => {
+              document.getElementById("destination").innerText = liveB.href;
+            });
+          } else {
+            liveB.href = url.replace(
+              `perf.brandeuauthorlb.ford.com/editor.html/content/guxeu/${currentEnv.domain}/${currentEnv.folder}/site-wide-content`,
+              `.ford.${currentEnv.domain}/content`
+            );
+
+            liveB.href = liveB.href + ".html";
+
+            liveB.addEventListener("click", () => {
+              chrome.tabs.update({ url: liveB.href });
+              window.close();
+            });
+            liveB.addEventListener("mouseover", () => {
+              document.getElementById("destination").innerText = liveB.href;
+            });
+          }
+        } else {
+          if (currentEnv.domain == "ch" || currentEnv.domain == "be") {
+            liveB.href = url.replace(
+              `perf.brandeuauthorlb.ford.com/editor.html/content/guxeu/${currentEnv.domain}/${currentEnv.folder}/home`,
+              `.${currentEnv.sub}.ford.${currentEnv.domain}`
+            );
+
+            liveB.addEventListener("click", () => {
+              chrome.tabs.update({ url: liveB.href });
+              window.close();
+            });
+            liveB.addEventListener("mouseover", () => {
+              document.getElementById("destination").innerText = liveB.href;
+            });
+          } else {
+            liveB.href = url.replace(
+              `perf.brandeuauthorlb.ford.com/editor.html/content/guxeu/${currentEnv.domain}/${currentEnv.folder}/home`,
+              `.ford.${currentEnv.domain}`
+            );
+
+            liveB.addEventListener("click", () => {
+              chrome.tabs.update({ url: liveB.href });
+              window.close();
+            });
+            liveB.addEventListener("mouseover", () => {
+              document.getElementById("destination").innerText = liveB.href;
+            });
+          }
+        }
+      }
+    }
+    function touchPerf(url, id) {
+      var perfB = document.getElementById("perf").getElementsByTagName("a")[0];
+
+      if (currentEnv.beta) {
+        if (currentEnv.dam) {
+          if (currentEnv.domain == "co.uk") {
+            perfB.href = url.replace(
+              `perf.brandeuauthorlb.ford.com/damadmin#/content/`,
+              `perf-beta-couk.brandeulb.ford.com/content/`
+            );
+            perfB.addEventListener("click", () => {
+              chrome.tabs.update({ url: perfB.href });
+              window.close();
+            });
+            perfB.addEventListener("mouseover", () => {
+              document.getElementById("destination").innerText = perfB.href;
+            });
+          } else {
+            perfB.href = url.replace(
+              `perf.brandeuauthorlb.ford.com/damadmin#/content/`,
+              `perf-beta-${currentEnv.domain}.brandeulb.ford.com/content/`
+            );
+            perfB.addEventListener("click", () => {
+              chrome.tabs.update({ url: perfB.href });
+              window.close();
+            });
+            perfB.addEventListener("mouseover", () => {
+              document.getElementById("destination").innerText = perfB.href;
+            });
+          }
+        } else if (currentEnv.siteWide) {
+          if (currentEnv.domain == "co.uk") {
+            perfB.href = url.replace(
+              `perf.brandeuauthorlb.ford.com/editor.html/content/guxeu-beta/uk/en_gb/site-wide-content`,
+              `perf-beta-couk.brandeulb.ford.com/content`
+            );
+            perfB.addEventListener("click", () => {
+              chrome.tabs.update({ url: perfB.href });
+              window.close();
+            });
+            perfB.addEventListener("mouseover", () => {
+              document.getElementById("destination").innerText = perfB.href;
+            });
+          } else {
+            perfB.href = url.replace(
+              `perf.brandeuauthorlb.ford.com/editor.html/content/guxeu-beta/${currentEnv.domain}/${currentEnv.folder}/site-wide-content`,
+              `perf-beta-${currentEnv.domain}.brandeulb.ford.com/content`
+            );
+            perfB.addEventListener("click", () => {
+              chrome.tabs.update({ url: perfB.href });
+              window.close();
+            });
+            perfB.addEventListener("mouseover", () => {
+              document.getElementById("destination").innerText = perfB.href;
+            });
+          }
+        } else {
+          sendGreetingsFromTouchToPerf(id);
+        }
+      } else {
+        if (currentEnv.dam) {
+          if (currentEnv.domain == "ch" || currentEnv.domain == "be") {
+            perfB.href = url.replace(
+              `perf.brandeuauthorlb.ford.com/damadmin#/content`,
+              `perf-${currentEnv.domain}${currentEnv.sub}.brandeulb.ford.com/content`
+            );
+            perfB.addEventListener("click", () => {
+              chrome.tabs.update({ url: perfB.href });
+              window.close();
+            });
+            perfB.addEventListener("mouseover", () => {
+              document.getElementById("destination").innerText = perfB.href;
+            });
+          } else {
+            perfB.href = url.replace(
+              `perf.brandeuauthorlb.ford.com/damadmin#/content`,
+              `perf-${currentEnv.domain}.brandeulb.ford.com/content`
+            );
+            perfB.addEventListener("click", () => {
+              chrome.tabs.update({ url: perfB.href });
+              window.close();
+            });
+            perfB.addEventListener("mouseover", () => {
+              document.getElementById("destination").innerText = perfB.href;
+            });
+          }
+        } else if (currentEnv.siteWide) {
+          if (currentEnv.domain == "ch" || currentEnv.domain == "be") {
+            perfB.href = url.replace(
+              `perf.brandeuauthorlb.ford.com/editor.html/content/guxeu/${currentEnv.domain}/${currentEnv.folder}/site-wide-content`,
+              `perf-${currentEnv.domain}${currentEnv.sub}.brandeulb.ford.com/content`
+            );
+
+            perfB.addEventListener("click", () => {
+              chrome.tabs.update({ url: perfB.href });
+              window.close();
+            });
+            perfB.addEventListener("mouseover", () => {
+              document.getElementById("destination").innerText = perfB.href;
+            });
+          } else {
+            perfB.href = url.replace(
+              `perf.brandeuauthorlb.ford.com/editor.html/content/guxeu/${currentEnv.domain}/${currentEnv.folder}/site-wide-content`,
+              `perf-${currentEnv.domain}.brandeulb.ford.com/content`
+            );
+
+            perfB.addEventListener("click", () => {
+              chrome.tabs.update({ url: perfB.href });
+              window.close();
+            });
+
+            perfB.addEventListener("mouseover", () => {
+              document.getElementById("destination").innerText = perfB.href;
+            });
+          }
+        } else {
+          if (currentEnv.domain == "ch" || currentEnv.domain == "be") {
+            perfB.href = url.replace(
+              `perf.brandeuauthorlb.ford.com/editor.html/content/guxeu/${currentEnv.domain}/${currentEnv.folder}/home`,
+              `perf-${currentEnv.domain}${currentEnv.sub}.brandeulb.ford.com`
+            );
+            perfB.addEventListener("click", () => {
+              chrome.tabs.update({ url: perfB.href });
+              window.close();
+            });
+            perfB.addEventListener("mouseover", () => {
+              document.getElementById("destination").innerText = perfB.href;
+            });
+          } else {
+            perfB.href = url.replace(
+              `perf.brandeuauthorlb.ford.com/editor.html/content/guxeu/${currentEnv.domain}/${currentEnv.folder}/home`,
+              `perf-${currentEnv.domain}.brandeulb.ford.com`
+            );
+            perfB.addEventListener("click", () => {
+              chrome.tabs.update({ url: perfB.href });
+              window.close();
+            });
+            perfB.addEventListener("mouseover", () => {
+              document.getElementById("destination").innerText = perfB.href;
+            });
+          }
+        }
+      }
+    }
+
+    function touchClassic(url) {
+      var classicB = document
+        .getElementById("classic")
+        .getElementsByTagName("a")[0];
+
+      classicB.href = url.replace("editor.html", "cf#");
+
+      classicB.addEventListener("click", () => {
+        chrome.tabs.update({ url: classicB.href });
+        window.close();
+      });
+      classicB.addEventListener("mouseover", () => {
+        document.getElementById("destination").innerText = classicB.href;
+      });
+    }
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    function classicLive(url, id) {
+      var liveB = document.getElementById("live").getElementsByTagName("a")[0];
+
+      if (currentEnv.beta) {
+        if (currentEnv.dam) {
+          // liveB.href = url.replace(
+          //   `perf.brandeuauthorlb.ford.com/damadmin#/content/`,
+          //   `.ford.${currentEnv.domain}/content/`
+          // );
+          // liveB.addEventListener("click", () => {
+          //   chrome.tabs.update({ url: liveB.href });
+          //   window.close();
+          // });
+          // liveB.addEventListener("mouseover", () => {
+          //   document.getElementById("destination").innerText = liveB.href;
+          // });
+        } else if (currentEnv.siteWide) {
+          if (currentEnv.domain == "co.uk") {
+            liveB.href = url.replace(
+              `perf.brandeuauthorlb.ford.com/cf#/content/guxeu-beta/uk/${currentEnv.folder}/site-wide-content`,
+              `.ford.co.uk/content`
+            );
+
+            liveB.addEventListener("click", () => {
+              chrome.tabs.update({ url: liveB.href });
+              window.close();
+            });
+            liveB.addEventListener("mouseover", () => {
+              document.getElementById("destination").innerText = liveB.href;
+            });
+          } else {
+            liveB.href = url.replace(
+              `perf.brandeuauthorlb.ford.com/cf#/content/guxeu-beta/${currentEnv.domain}/${currentEnv.folder}/site-wide-content`,
+              `.ford.${currentEnv.domain}/content`
+            );
+
+            liveB.addEventListener("click", () => {
+              chrome.tabs.update({ url: liveB.href });
+              window.close();
+            });
+
+            liveB.addEventListener("mouseover", () => {
+              document.getElementById("destination").innerText = liveB.href;
+            });
+          }
+        } else {
+          sendGreetingsFromClassic(id);
+        }
+      } else {
+        if (currentEnv.dam) {
+          // if (currentEnv.domain == "ch" || currentEnv.domain == "be") {
+          //   liveB.href = url.replace(
+          //     `perf.brandeuauthorlb.ford.com/damadmin#/content`,
+          //     `.${currentEnv.sub}.ford.${currentEnv.domain}/content`
+          //   );
+          //   liveB.addEventListener("click", () => {
+          //     chrome.tabs.update({ url: liveB.href });
+          //     window.close();
+          //   });
+          //   liveB.addEventListener("mouseover", () => {
+          //     document.getElementById("destination").innerText = liveB.href;
+          //   });
+          // } else {
+          //   liveB.href = url.replace(
+          //     `perf.brandeuauthorlb.ford.com/damadmin#/content`,
+          //     `.ford.${currentEnv.domain}/content`
+          //   );
+          //   liveB.addEventListener("click", () => {
+          //     chrome.tabs.update({ url: liveB.href });
+          //     window.close();
+          //   });
+          //   liveB.addEventListener("mouseover", () => {
+          //     document.getElementById("destination").innerText = liveB.href;
+          //   });
+          // }
+        } else if (currentEnv.siteWide) {
+          if (currentEnv.domain == "ch" || currentEnv.domain == "be") {
+            liveB.href = url.replace(
+              `perf.brandeuauthorlb.ford.com/cf#/content/guxeu/${currentEnv.domain}/${currentEnv.folder}/site-wide-content`,
+              `.${currentEnv.sub}.ford.${currentEnv.domain}/content`
+            );
+
+            liveB.addEventListener("click", () => {
+              chrome.tabs.update({ url: liveB.href });
+              window.close();
+            });
+            liveB.addEventListener("mouseover", () => {
+              document.getElementById("destination").innerText = liveB.href;
+            });
+          } else {
+            liveB.href = url.replace(
+              `perf.brandeuauthorlb.ford.com/cf#/content/guxeu/${currentEnv.domain}/${currentEnv.folder}/site-wide-content`,
+              `.ford.${currentEnv.domain}/content`
+            );
+
+            liveB.href = liveB.href + ".html";
+
+            liveB.addEventListener("click", () => {
+              chrome.tabs.update({ url: liveB.href });
+              window.close();
+            });
+            liveB.addEventListener("mouseover", () => {
+              document.getElementById("destination").innerText = liveB.href;
+            });
+          }
+        } else {
+          if (currentEnv.domain == "ch" || currentEnv.domain == "be") {
+            liveB.href = url.replace(
+              `perf.brandeuauthorlb.ford.com/cf#/content/guxeu/${currentEnv.domain}/${currentEnv.folder}/home`,
+              `.${currentEnv.sub}.ford.${currentEnv.domain}`
+            );
+
+            liveB.addEventListener("click", () => {
+              chrome.tabs.update({ url: liveB.href });
+              window.close();
+            });
+            liveB.addEventListener("mouseover", () => {
+              document.getElementById("destination").innerText = liveB.href;
+            });
+          } else {
+            liveB.href = url.replace(
+              `perf.brandeuauthorlb.ford.com/cf#/content/guxeu/${currentEnv.domain}/${currentEnv.folder}/home`,
+              `.ford.${currentEnv.domain}`
+            );
+
+            liveB.addEventListener("click", () => {
+              chrome.tabs.update({ url: liveB.href });
+              window.close();
+            });
+            liveB.addEventListener("mouseover", () => {
+              document.getElementById("destination").innerText = liveB.href;
+            });
+          }
+        }
+      }
+    }
+
+    function classicPerf(url, id) {
+      var perfB = document.getElementById("perf").getElementsByTagName("a")[0];
+
+      if (currentEnv.beta) {
+        if (currentEnv.dam) {
+          // if (currentEnv.domain == "co.uk") {
+          //   perfB.href = url.replace(
+          //     `perf.brandeuauthorlb.ford.com/damadmin#/content/`,
+          //     `perf-beta-couk.brandeulb.ford.com/content/`
+          //   );
+          //   perfB.addEventListener("click", () => {
+          //     chrome.tabs.update({ url: perfB.href });
+          //     window.close();
+          //   });
+          //   perfB.addEventListener("mouseover", () => {
+          //     document.getElementById("destination").innerText = perfB.href;
+          //   });
+          // } else {
+          //   perfB.href = url.replace(
+          //     `perf.brandeuauthorlb.ford.com/damadmin#/content/`,
+          //     `perf-beta-${currentEnv.domain}.brandeulb.ford.com/content/`
+          //   );
+          //   perfB.addEventListener("click", () => {
+          //     chrome.tabs.update({ url: perfB.href });
+          //     window.close();
+          //   });
+          //   perfB.addEventListener("mouseover", () => {
+          //     document.getElementById("destination").innerText = perfB.href;
+          //   });
+          // }
+        } else if (currentEnv.siteWide) {
+          if (currentEnv.domain == "co.uk") {
+            perfB.href = url.replace(
+              `perf.brandeuauthorlb.ford.com/cf#/content/guxeu-beta/uk/en_gb/site-wide-content`,
+              `perf-beta-couk.brandeulb.ford.com/content`
+            );
+            perfB.addEventListener("click", () => {
+              chrome.tabs.update({ url: perfB.href });
+              window.close();
+            });
+            perfB.addEventListener("mouseover", () => {
+              document.getElementById("destination").innerText = perfB.href;
+            });
+          } else {
+            perfB.href = url.replace(
+              `perf.brandeuauthorlb.ford.com/cf#/content/guxeu-beta/${currentEnv.domain}/${currentEnv.folder}/site-wide-content`,
+              `perf-beta-${currentEnv.domain}.brandeulb.ford.com/content`
+            );
+            perfB.addEventListener("click", () => {
+              chrome.tabs.update({ url: perfB.href });
+              window.close();
+            });
+            perfB.addEventListener("mouseover", () => {
+              document.getElementById("destination").innerText = perfB.href;
+            });
+          }
+        } else {
+          sendGreetingsFromClassicToPerf(id);
+        }
+      } else {
+        if (currentEnv.dam) {
+          // if (currentEnv.domain == "ch" || currentEnv.domain == "be") {
+          //   perfB.href = url.replace(
+          //     `perf.brandeuauthorlb.ford.com/damadmin#/content`,
+          //     `perf-${currentEnv.domain}${currentEnv.sub}.brandeulb.ford.com/content`
+          //   );
+          //   perfB.addEventListener("click", () => {
+          //     chrome.tabs.update({ url: perfB.href });
+          //     window.close();
+          //   });
+          //   perfB.addEventListener("mouseover", () => {
+          //     document.getElementById("destination").innerText = perfB.href;
+          //   });
+          // } else {
+          //   perfB.href = url.replace(
+          //     `perf.brandeuauthorlb.ford.com/damadmin#/content`,
+          //     `perf-${currentEnv.domain}.brandeulb.ford.com/content`
+          //   );
+          //   perfB.addEventListener("click", () => {
+          //     chrome.tabs.update({ url: perfB.href });
+          //     window.close();
+          //   });
+          //   perfB.addEventListener("mouseover", () => {
+          //     document.getElementById("destination").innerText = perfB.href;
+          //   });
+          // }
+        } else if (currentEnv.siteWide) {
+          if (currentEnv.domain == "ch" || currentEnv.domain == "be") {
+            perfB.href = url.replace(
+              `perf.brandeuauthorlb.ford.com/cf#/content/guxeu/${currentEnv.domain}/${currentEnv.folder}/site-wide-content`,
+              `perf-${currentEnv.domain}${currentEnv.sub}.brandeulb.ford.com/content`
+            );
+
+            perfB.addEventListener("click", () => {
+              chrome.tabs.update({ url: perfB.href });
+              window.close();
+            });
+            perfB.addEventListener("mouseover", () => {
+              document.getElementById("destination").innerText = perfB.href;
+            });
+          } else {
+            perfB.href = url.replace(
+              `perf.brandeuauthorlb.ford.com/cf#/content/guxeu/${currentEnv.domain}/${currentEnv.folder}/site-wide-content`,
+              `perf-${currentEnv.domain}.brandeulb.ford.com/content`
+            );
+
+            perfB.addEventListener("click", () => {
+              chrome.tabs.update({ url: perfB.href });
+              window.close();
+            });
+
+            perfB.addEventListener("mouseover", () => {
+              document.getElementById("destination").innerText = perfB.href;
+            });
+          }
+        } else {
+          if (currentEnv.domain == "ch" || currentEnv.domain == "be") {
+            perfB.href = url.replace(
+              `perf.brandeuauthorlb.ford.com/cf#/content/guxeu/${currentEnv.domain}/${currentEnv.folder}/home`,
+              `perf-${currentEnv.domain}${currentEnv.sub}.brandeulb.ford.com`
+            );
+            perfB.addEventListener("click", () => {
+              chrome.tabs.update({ url: perfB.href });
+              window.close();
+            });
+            perfB.addEventListener("mouseover", () => {
+              document.getElementById("destination").innerText = perfB.href;
+            });
+          } else {
+            perfB.href = url.replace(
+              `perf.brandeuauthorlb.ford.com/cf#/content/guxeu/${currentEnv.domain}/${currentEnv.folder}/home`,
+              `perf-${currentEnv.domain}.brandeulb.ford.com`
+            );
+            perfB.addEventListener("click", () => {
+              chrome.tabs.update({ url: perfB.href });
+              window.close();
+            });
+            perfB.addEventListener("mouseover", () => {
+              document.getElementById("destination").innerText = perfB.href;
+            });
+          }
+        }
+      }
+    }
+
+    function classicTouch(url) {
+      var touchB = document
+        .getElementById("touch")
+        .getElementsByTagName("a")[0];
+
+      touchB.href = url.replace("cf#", "editor.html");
+
+      touchB.addEventListener("click", () => {
+        chrome.tabs.update({ url: touchB.href });
+        window.close();
+      });
+      touchB.addEventListener("mouseover", () => {
+        document.getElementById("destination").innerText = touchB.href;
+      });
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1150,6 +2223,7 @@ chrome.storage.sync.get("jira", function (data) {
               }
               livePerf(currentEnv.url);
               liveTouch(currentEnv.url);
+              liveClassic(currentEnv.url);
             }
 
             if (isPerf(currentEnv.url)) {
@@ -1222,10 +2296,12 @@ chrome.storage.sync.get("jira", function (data) {
 
               perfLive(currentEnv.url);
               perfTouch(currentEnv.url);
-              for (var i = 0; i < links.length; i++) {
-                if (!links[i].classList.contains("activee")) {
-                  links[i].classList.add("toHover");
-                }
+              perfClassic(currentEnv.url);
+            }
+
+            for (var i = 0; i < links.length; i++) {
+              if (!links[i].classList.contains("activee")) {
+                links[i].classList.add("toHover");
               }
             }
           }, 1500);

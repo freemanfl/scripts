@@ -2,9 +2,13 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box !important;
+  color: rgb(39, 39, 124);
 }
 a {
   text-decoration: none;
+}
+
+a:visited {
 }
 
 body {
@@ -149,6 +153,15 @@ a {
     transform: rotate(360deg);
   }
 }
+
+@keyframes spinVert {
+  0% {
+    transform: rotateY(0deg);
+  }
+  100% {
+    transform: rotateY(360deg);
+  }
+}
 .settings {
   width: 12px;
   height: 12px;
@@ -165,20 +178,35 @@ a {
   animation: spin 2s linear infinite;
 }
 
+.help {
+  width: 12px;
+  height: 12px;
+  position: absolute;
+  right: 6px;
+  bottom: 6px;
+
+  transition: all ease 0.1s;
+  cursor: pointer;
+}
+
+.help:hover {
+  animation: spinVert 2s linear infinite;
+}
+
 .hover-link {
   text-decoration: none;
 }
 
-/* .hover-link::after {
+.toHover::after {
   content: "";
   display: block;
   width: 0;
   height: 1px;
   background: blue;
-  transition: width 0.1s;
+  transition: width 0.2s;
 }
 
-.hover-link:hover::after {
+.toHover:hover::after {
   width: 100%;
-  transition: width 0.1s;
-} */
+  transition: width 0.2s;
+}

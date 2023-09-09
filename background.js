@@ -42,8 +42,6 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
       return true;
     }
   } else if (request.greeting === "inject") {
-    console.log("received to inject");
-    console.log(request.value);
     chrome.scripting
       .executeScript({
         target: { tabId: request.value, allFrames: true },
@@ -54,6 +52,18 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
           sendResponse(res);
         });
       });
+  } else if (request.greeting === "inject2") {
+    chrome.scripting
+      .executeScript({
+        target: { tabId: request.value },
+        files: ["scripts/content.js"],
+      })
+      .then(() => {
+        chrome.tabs.sendMessage(request.value, request).then((res) => {
+          sendResponse(res);
+        });
+      });
   }
+
   return true;
 });

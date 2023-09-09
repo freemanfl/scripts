@@ -146,3 +146,17 @@
     transform: rotate(360deg);
   }
 }
+
+.toHover::after {
+  content: "";
+  display: block;
+  width: 0;
+  height: 1px;
+  background: blue;
+  transition: width 0.2s;
+}
+
+.toHover:hover::after {
+  width: 100%;
+  transition: width 0.2s;
+}
