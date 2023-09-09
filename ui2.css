@@ -153,10 +153,10 @@
   width: 0;
   height: 1px;
   background: blue;
-  transition: width 0.2s;
+  transition: width 0.5s;
 }
 
 .toHover:hover::after {
   width: 100%;
-  transition: width 0.2s;
+  transition: width 0.5s;
 }

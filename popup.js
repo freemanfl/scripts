@@ -1768,6 +1768,7 @@ function touchClassic(url) {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 function classicLive(url, id) {
+  q;
   var liveB = document.getElementById("live").getElementsByTagName("a")[0];
 
   if (currentEnv.beta) {
@@ -1861,8 +1862,6 @@ function classicLive(url, id) {
           `perf.brandeuauthorlb.ford.com/cf#/content/guxeu/${currentEnv.domain}/${currentEnv.folder}/site-wide-content`,
           `.ford.${currentEnv.domain}/content`
         );
-
-        liveB.href = liveB.href + ".html";
 
         liveB.addEventListener("click", () => {
           chrome.tabs.update({ url: liveB.href });
