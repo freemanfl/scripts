@@ -1,3 +1,8 @@
+html {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 body {
   display: flex;
   flex-direction: column;
@@ -6,9 +11,14 @@ body {
   align-items: center;
   justify-content: center;
   padding-bottom: 50px;
+  font-size: 130%;
+  max-width: 1000px;
 }
 
 img {
-  width: 600px;
-  height: 300px;
+  max-width: 600px;
+}
+
+#how-to-cont {
+  display: flex;
 }
